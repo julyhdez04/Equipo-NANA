@@ -7,15 +7,12 @@
 
 
   
-# Equipo 404 Not Found
+# Equipo NANA
 
-bleh
-
-</header>
+</header> 
 
 <img src=https://github.com/Choclotherock/Locura/blob/cd9da4e185746b8a8c22bd0f42da8f9c3d226a6a/gato%20loco.png alt=celebrate width=300 align=right>
-Pues es un equipo, que pues equipea y puas asi
-Esta conformado por nada mas y nada menos k:
+Integrantes del equipo:
 
 Navarro Hernández Hugo Jesús (Hiukilll)
 
@@ -28,12 +25,5 @@ Hernandez Hernandez Jualiana (julyhdez04)
 Díaz Rodríguez Kaylee Michelle (kay16mich)
 
 <footer>
-
-
-  
-ola
-
-Pero ola de mar o ola de saludo??
-
 
 </footer>
