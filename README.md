@@ -12,7 +12,7 @@ Castillo Acosta Josué Marcelo (Pinging78)
 
 Salas Martinez Cesar David (Choclo the rock)
 
-Hernandez Hernandez Jualiana ()
+Hernandez Hernandez Jualiana (julyhdes04)
 
 Díaz Rodríguez Kaylee Michelle (kay16mich)
 
