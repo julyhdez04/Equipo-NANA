@@ -1,4 +1,4 @@
-#Equipo: Nana
+#Equipo: diablo
 #Trabajaron:Josue Marcelo y Kaylee Michelle
 # 2025/03/03 	V.1.0.0
 # El siguiente código realiza las 4 operaciones basicas con dos numeros dados su finalidad es mostrar los
