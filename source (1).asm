@@ -1,40 +1,86 @@
-;Versión 1.2.1
+;Versión 2.0.0
 
-	JMP boot	;Con la función JMP realizamos un salto a la posición que le indiquemos en el argumento
-			;en este caso hasta la zona de "boot" con el fin de evitar que lea las definiciones que
-			;se realicen antes de dicha zona especificada.
-
-stackTop    EQU 0x1AF    ;EQU significa equivalente a algo, 0x definimos que lo siguiente se encuentra en el sistema
-			;hexadecimal en este caso se refiere a la posición que queremos que inicie el puntero de pila
-			;en la linea queremos que inice en el punto más alto de la memoria
-txtDisplay  EQU 0x2E0	;Tambien definimos una ubicación pero en este caso es del texto
-
-caritas:
-		DB "Ola profe aquí los mas cabrones."
+	JMP boot
+stackTop EQU 0x02DF
+texto EQU 0x2E0	
+pantalla EQU 0x300
+findelapantalla EQU 0x400
+pantalla2 EQU 0x350
+gatos:
+DB "Miau miau miau  miau miau mew :3"
         DB 0
-		DB "++++                            "	;caritas almacena como una variable todo lo que queremos imprimir
-		DB 0		;DB definimos el byte 
-		DB "////                            "	;Nuesto DB0 lo tomamos como nulo/espacio/vacío/terminado
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\x01\x01\xC4"
+DB "\xC4\xC4\x01\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\x01\xFF\x01"
+DB "\x01\x01\xFF\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\x01\xC4\xC4\x01\x01\x01\x01"
+DB "\x01\x01\x01\xC4\x01\xC4\xC4\xC4"
+DB "\x01\xC4\xC4\xC4\xC4\x01\x01\xFC"
+DB "\x01\x01\xFC\x01\xC4\xC4\xC4\xC4"
+DB "\x01\xC4\xC4\xC4\x01\x01\x01\x01"
+DB "\x01\x01\x01\xC4\x01\xC4\xC4\xC4"
+DB "\x01\xC4\xC4\xC4\xC4\xC4\xFF\xFF"
+DB "\xFF\xFF\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\x01\xC4\xC4\xC4\x01\x01\xFF"
+DB "\xFF\xFF\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\x01\x01\x01\x01\x01\x01"
+DB "\xFF\x01\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\x01\x01\x01\x01\xFF\x01"
+DB "\x01\x01\xFF\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
+		DB 0		
+DB "\xC4\xC4\x01\xC4\x01\x01\x01\x01"
+DB "\x01\x01\x01\xC4\x01\xC4\xC4\xC4"
+DB "\xC4\x01\xC4\xC4\xC4\x01\x01\xFC"
+DB "\x01\x01\xFC\x01\xC4\xC4\xC4\xC4"
+DB "\xC4\x01\xC4\xC4\x01\x01\x01\x01"
+DB "\x01\x01\x01\xC4\x01\xC4\xC4\xC4"
+DB "\xC4\x01\xC4\xC4\xC4\xC4\xFF\xFF"
+DB "\xFF\xFF\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\x01\xC4\xC4\x01\x01\xFF"
+DB "\xFF\xFF\xC4\xC4\xC4\xC4\xC4\xC4"
 		DB 0
-       	 	DB "----                            "
+DB "\xC4\x01\xC4\xC4\x01\x01\x01\x01"
+DB "\x01\x01\x01\xC4\x01\xC4\xC4\xC4"
+DB "\xC4\xC4\x01\xC4\xC4\x01\x01\xFC"
+DB "\x01\x01\xFC\x01\xC4\xC4\xC4\xC4"
+DB "\xC4\xC4\x01\xC4\x01\x01\x01\x01"
+DB "\x01\x01\x01\xC4\x01\xC4\xC4\xC4"
+DB "\xC4\xC4\x01\xC4\xC4\xC4\xFF\xFF"
+DB "\xFF\xFF\xC4\xC4\xC4\xC4\xC4\xC4"
+DB "\xC4\x01\xC4\xC4\xC4\x01\x01\xFF"
+DB "\xFF\xFF\xC4\xC4\xC4\xC4\xC4\xC4"
         	DB 0
-delay EQU 250
+delay EQU 1
 
-boot:				;Aquí ya incia a leer
-	MOV SP, stackTop	;Inicia el puntero de pila en la dirección indicada 
-	MOV C, caritas		;Apunta el registro c al inicio del texto al primer caracter del mesaje
-	MOV D, txtDisplay	;Apunta el registro d a la dirección donde se imprime el primer texto
-	CALL .loop		;CALL es igual a llamar la función en este caso imprimir 
-	HLT			;Detiene la ejecución despues de la impresion primera pero nuestro codigo reinicia el ciclo
+boot:				
+	MOV SP, stackTop	 
+	MOV C, gatos
+	MOV D, texto
+	CALL .loop		
+	HLT			
 
-.loop:				;Genera un ciclo dentro del código
+.loop:				
 	MOVB AL, [C]	
 	MOVB [D], AL	
 	INC C
 	INC D
 	CMPB BL, [C]	
 	JNZ .loop		
-	MOV D, txtDisplay
+	MOV D, pantalla
     INC C
     CALL .loop2	
     CALL boot
@@ -45,7 +91,7 @@ boot:				;Aquí ya incia a leer
 	MOVB [D], AL	
 	INC C
 	INC D
-	CMPB BL, [C]	
+	CMP D,findelapantalla
     JNZ .loop2
     MOV D, delay
     INC C
@@ -56,7 +102,7 @@ boot:				;Aquí ya incia a leer
     INC B
     CMP B, D
     JNZ .loopDELAY
-    MOV D, txtDisplay
+    MOV D, pantalla2
     MOV B, 0
     CALL .loop22
     RET
@@ -68,5 +114,19 @@ boot:				;Aquí ya incia a leer
     INC D 
     CMPB BL, [C]
     JNZ .loop22
+    MOV D, pantalla2
+    INC C
+    CALL .loop222
     RET
+.loop222:
+	MOVB AL, [C]	
+	MOVB [D], AL	
+	INC C
+	INC D
+	CMPB BL, [C]
+    JNZ .loop222
+    INC C
+    RET
+    
+
     
