@@ -1,10 +1,10 @@
-;Versión 1.2.0 
+;Versión 1.2.1
 
 	JMP boot	;Con la función JMP realizamos un salto a la posición que le indiquemos en el argumento
 			;en este caso hasta la zona de "boot" con el fin de evitar que lea las definiciones que
 			;se realicen antes de dicha zona especificada.
 
-stackTop    EQU 0xFF    ;EQU significa equivalente a algo, 0x definimos que lo siguiente se encuentra en el sistema
+stackTop    EQU 0x1AF    ;EQU significa equivalente a algo, 0x definimos que lo siguiente se encuentra en el sistema
 			;hexadecimal en este caso se refiere a la posición que queremos que inicie el puntero de pila
 			;en la linea queremos que inice en el punto más alto de la memoria
 txtDisplay  EQU 0x2E0	;Tambien definimos una ubicación pero en este caso es del texto
@@ -12,11 +12,11 @@ txtDisplay  EQU 0x2E0	;Tambien definimos una ubicación pero en este caso es del
 caritas:
 		DB "Ola profe aquí los mas cabrones."
         DB 0
-		DB "++++"	;caritas almacena como una variable todo lo que queremos imprimir
+		DB "++++                            "	;caritas almacena como una variable todo lo que queremos imprimir
 		DB 0		;DB definimos el byte 
-		DB "////"	;Nuesto DB0 lo tomamos como nulo/espacio/vacío/terminado
+		DB "////                            "	;Nuesto DB0 lo tomamos como nulo/espacio/vacío/terminado
 		DB 0
-       	 	DB "----"
+       	 	DB "----                            "
         	DB 0
 delay EQU 250
 
