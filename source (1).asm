@@ -1,4 +1,4 @@
-;Versión 2.0.1
+;Versión 2.0.2
 
 	JMP boot ;Saltar al inicio del programa
 stackTop EQU 0x02DF ;Definir el puntero con posición hexadecimal
@@ -65,7 +65,7 @@ DB "\xFF\xFF\xC4\xC4\xC4\xC4\xC4\xC4"
 DB "\xC4\x01\xC4\xC4\xC4\x01\x01\xFF"
 DB "\xFF\xFF\xC4\xC4\xC4\xC4\xC4\xC4"
         	DB 0
-delay EQU 1
+delay EQU 1 ;
 
 boot:	;Inicio de ejecución del programa			
 	MOV SP, stackTop ;Mover SP a la posición del puntero	 
@@ -92,7 +92,7 @@ boot:	;Inicio de ejecución del programa
 	MOVB [D], AL ;Mover D a la posición de AL
 	INC C ;Incrementar C para mover la posición
 	INC D;Incrementar D para mover la posición
-	CMP D,findelapantalla ;Comparar D  on "findelapantalla" si no se cumple, retornar
+	CMP D,findelapantalla ;Comparar D  con "findelapantalla" si no se cumple, retornar
     JNZ .loop2 ;Regresar a loop2 si no se cumple la condición anterior
     MOV D, delay ;Mover D a la posición de "delay"
     INC C ;Incrementar C para mover la posición
@@ -100,13 +100,13 @@ boot:	;Inicio de ejecución del programa
     RET ;Retornar
     
 .loopDELAY:
-    INC B
-    CMP B, D
-    JNZ .loopDELAY
-    MOV D, pantalla2
-    MOV B, 0
-    CALL .loop22
-    RET
+    INC B ;Incrementa el valor de B
+    CMP B, D ;Compara el valor de B con D 
+    JNZ .loopDELAY ;Si el valor de B no es igual a D, regresa al .loopDELAY y si es igual sigue
+    MOV D, pantalla2 ;Mueve D a la posición de "pantalla2"
+    MOV B, 0 ;Mueve B a la posición 0
+    CALL .loop22 ;llama a la funcion .loop22
+    RET ;Retorna al CALL que llamo la función .loopDELAY
 
 .loop22:
 	MOVB AL, [C]
