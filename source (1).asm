@@ -122,7 +122,7 @@ boot:	;Inicio de ejecución del programa
 .loop222:
 	MOVB AL, [C] ; Esta línea copia el dato de la dirección de memoria indicada por C al registro AL 	
 	MOVB [D], AL ; Aquí se mueve el valor del registro recien puesto en AL a la dirección de D
-	INC C	     ; Se incrementa el valor del registro C en 1.
+	INC C        ; Se incrementa el valor del registro C en 1.
 	INC D        ; Se incrementa el valor del registro D en 1.
 	CMPB BL, [C] ; Después de los cambios se compara el valor del registro BL con el byte apuntado por C
     JNZ .loop222     ; Si el resultado de la comparación anterior no es cero (BL no es igual al valor en [C]), salta de nuevo a la etiqueta .loop222, haciendo un bucle.
