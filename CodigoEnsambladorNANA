@@ -1,4 +1,4 @@
-;Versión 2.0.3
+;Versión 2.0.4
 
 	JMP Inicio ;Saltar al inicio del programa
 stackTop EQU 0x02DF ;Definir etiqueta "stackTop" con posición hexadecimal (sera para la posicion del SS)
@@ -84,7 +84,7 @@ Inicio:	;Inicio de ejecución del programa
 	MOV D, pantalla ;Mover D a la posición establecida en "pantalla"
     INC C ;Incrementar C para mover la posición
     CALL .loop2	;Llamar la función loop2
-    CALL boot ;Llamar la función boot, esto para volver a iniciar el ciclo y tener en bucle constante la animacion sin tener que parar
+    CALL Inicio ;Llamar la función Inicio, esto para volver a iniciar el ciclo y tener en bucle constante la animacion sin tener que parar
 
 .loop2: ;Inicia un bucle para la impresion del primer sprite en la pantalla grafica
 	MOVB AL, [C] ;Mover AL a la posición del byte que señala C	
@@ -113,7 +113,7 @@ Inicio:	;Inicio de ejecución del programa
     INC C ;Incrementamos C para mover la posición 
     INC D ;Incrementamos D para mover la posición
     CMPB BL, [C] ; Compara el valor de la posicion de BL con el byte de C
-    JNZ .loop22 ;Si son iguales continuar, en caso contrario regresar
+    JNZ .loop3 ;Si son iguales continuar, en caso contrario regresar
     MOV D, pantalla2 ;Mover D a al posición de "pantalla2"
     INC C ;Incrementamos C para mover la posición
     CALL .loop4 ;Llamar a la función del loop4
@@ -124,7 +124,7 @@ Inicio:	;Inicio de ejecución del programa
 	INC C        ; Se incrementa el valor del registro C en 1.
 	INC D        ; Se incrementa el valor del registro D en 1.
 	CMPB BL, [C] ; Después de los cambios se compara el valor del registro BL con el byte apuntado por C
-    JNZ .loop222     ; Si el resultado de la comparación anterior no es cero (BL no es igual al valor en [C]), salta de nuevo a la etiqueta .loop4, haciendo un bucle.
+    JNZ .loop4       ; Si el resultado de la comparación anterior no es cero (BL no es igual al valor en [C]), salta de nuevo a la etiqueta .loop4, haciendo un bucle.
     INC C            ; Si se cumplio lo anterior ahora incrementamos el registro C en 1, avanzando a lo siguiente en el código
     RET              ; Retorna al CALL que llamó al .loop4 lo que finaliza su ejecución
 
