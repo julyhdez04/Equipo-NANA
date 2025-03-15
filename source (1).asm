@@ -120,14 +120,14 @@ boot:	;Inicio de ejecución del programa
     CALL .loop222 ;Llamar a la función del loop22
     RET ;Retorna al CALL que llamó la función de .loop22
 .loop222:
-	MOVB AL, [C]	
-	MOVB [D], AL	
-	INC C
-	INC D
-	CMPB BL, [C]
-    JNZ .loop222
-    INC C
-    RET
+	MOVB AL, [C] ; Esta línea copia el dato de la dirección de memoria indicada por C al registro AL 	
+	MOVB [D], AL ; Aquí se mueve el valor del registro recien puesto en AL a la dirección de D
+	INC C	     ; Se incrementa el valor del registro C en 1.
+	INC D        ; Se incrementa el valor del registro D en 1.
+	CMPB BL, [C] ; Después de los cambios se compara el valor del registro BL con el byte apuntado por C
+    JNZ .loop222     ; Si el resultado de la comparación anterior no es cero (BL no es igual al valor en [C]), salta de nuevo a la etiqueta .loop222, haciendo un bucle.
+    INC C            ; Si se cumplio lo anterior ahora incrementamos el registro C en 1, avanzando a lo siguiente en el código
+    RET              ; Retorna al CALL que llamó al .loop222 lo que finaliza su ejecución
     
 
     
