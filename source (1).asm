@@ -109,16 +109,16 @@ boot:	;Inicio de ejecución del programa
     RET ;Retorna al CALL que llamo la función .loopDELAY
 
 .loop22:
-	MOVB AL, [C]
-    MOVB [D], AL
-    INC C
-    INC D 
-    CMPB BL, [C]
-    JNZ .loop22
-    MOV D, pantalla2
-    INC C
-    CALL .loop222
-    RET
+	MOVB AL, [C] ;Mover AL a la posición de C 
+    MOVB [D], AL ;Mover D a la posición de AL
+    INC C ;Incrementamos C para mover la posición 
+    INC D ;Incrementamos D para mover la posición
+    CMPB BL, [C] ; Compara el valor de BL con C
+    JNZ .loop22 ;Regresa al loop22 si no se cumple la condición anterior 
+    MOV D, pantalla2 ;Mover D a al posición de "pantalla2"
+    INC C ;Incrementamos C para mover la posición
+    CALL .loop222 ;Llamar a la función del loop22
+    RET ;Retorna al CALL que llamó la función de .loop22
 .loop222:
 	MOVB AL, [C]	
 	MOVB [D], AL	
