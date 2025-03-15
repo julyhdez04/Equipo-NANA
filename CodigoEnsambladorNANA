@@ -1,9 +1,9 @@
-;Versión 2.0.4
+;Versión 2.0.5
 
 	JMP Inicio ;Saltar al inicio del programa
 stackTop EQU 0x02DF ;Definir etiqueta "stackTop" con posición hexadecimal (sera para la posicion del SS)
 texto EQU 0x2E0	 ;Definir etiqueta  "texto" en celda con posición hexadecimal (Es para poner un puntero en el inicio del display de texto)
-pantalla EQU 0x300 Definir etiqueta "pantalla" en celda con posición hexadecimal (Es para poner un puntero en el inicio del display grafico)
+pantalla EQU 0x300 ;Definir etiqueta "pantalla" en celda con posición hexadecimal (Es para poner un puntero en el inicio del display grafico)
 findelapantalla EQU 0x400 ;Definir "findelapantalla" en celda con posición hexadecimal (Es donde ya no hay mas pantalla)
 pantalla2 EQU 0x350 ;Definir etiqueta de "pantalla2"en celda con posición hexadecimal (Es para poner un puntero en una posicion diferente del display grafico)
 delay EQU 1 ;Definimos una etiqueta "delay" con un valor, entre mas grande este mas largo sera el "Delay"
