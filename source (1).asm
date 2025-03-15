@@ -1,15 +1,17 @@
-;Versión 2.0.2
+;Versión 2.0.3
 
-	JMP boot ;Saltar al inicio del programa
-stackTop EQU 0x02DF ;Definir el puntero con posición hexadecimal
-texto EQU 0x2E0	 ;Definir etiqueta de texto en celda con posición hexadecimal
-pantalla EQU 0x300 Definir etiqueta de display en celda con posición hexadecimal
-findelapantalla EQU 0x400 ;Definir tamaño del display (final) en celda con posición hexadecimal
-pantalla2 EQU 0x350 ;Definir etiqueta de segundo display en celda con posición hexadecimal
-gatos:
+	JMP Inicio ;Saltar al inicio del programa
+stackTop EQU 0x02DF ;Definir etiqueta "stackTop" con posición hexadecimal (sera para la posicion del SS)
+texto EQU 0x2E0	 ;Definir etiqueta  "texto" en celda con posición hexadecimal (Es para poner un puntero en el inicio del display de texto)
+pantalla EQU 0x300 Definir etiqueta "pantalla" en celda con posición hexadecimal (Es para poner un puntero en el inicio del display grafico)
+findelapantalla EQU 0x400 ;Definir "findelapantalla" en celda con posición hexadecimal (Es donde ya no hay mas pantalla)
+pantalla2 EQU 0x350 ;Definir etiqueta de "pantalla2"en celda con posición hexadecimal (Es para poner un puntero en una posicion diferente del display grafico)
+delay EQU 1 ;Definimos una etiqueta "delay" con un valor, entre mas grande este mas largo sera el "Delay"
+
+gatos: ;grupo de texto y sprites
 DB "Miau miau miau  miau miau mew :3" ;Definir byte de texto a mostrar
-        DB 0 ;Finalizar texto
-;Definir bytes para la animación con bytes de colores
+        DB 0 ;Byte definido como 0 para poder parar un bucle
+;Definir bytes para los sprites de la animacion con bytes con los colores en formato hexadecimal
 DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
 DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
 DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
@@ -42,7 +44,7 @@ DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
 DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
 DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
 DB "\xC4\xC4\xC4\xC4\xC4\xC4\xC4\xC4"
-		DB 0		
+		DB 0 ;Byte para parar poder compararlo y parar el bucle	
 DB "\xC4\xC4\x01\xC4\x01\x01\x01\x01"
 DB "\x01\x01\x01\xC4\x01\xC4\xC4\xC4"
 DB "\xC4\x01\xC4\xC4\xC4\x01\x01\xFC"
@@ -53,7 +55,7 @@ DB "\xC4\x01\xC4\xC4\xC4\xC4\xFF\xFF"
 DB "\xFF\xFF\xC4\xC4\xC4\xC4\xC4\xC4"
 DB "\xC4\xC4\x01\xC4\xC4\x01\x01\xFF"
 DB "\xFF\xFF\xC4\xC4\xC4\xC4\xC4\xC4"
-		DB 0
+		DB 0 ;Lo mismo je
 DB "\xC4\x01\xC4\xC4\x01\x01\x01\x01"
 DB "\x01\x01\x01\xC4\x01\xC4\xC4\xC4"
 DB "\xC4\xC4\x01\xC4\xC4\x01\x01\xFC"
@@ -64,70 +66,68 @@ DB "\xC4\xC4\x01\xC4\xC4\xC4\xFF\xFF"
 DB "\xFF\xFF\xC4\xC4\xC4\xC4\xC4\xC4"
 DB "\xC4\x01\xC4\xC4\xC4\x01\x01\xFF"
 DB "\xFF\xFF\xC4\xC4\xC4\xC4\xC4\xC4"
-        	DB 0
-delay EQU 1 ;
+        	DB 0 ; bleh :p
 
-boot:	;Inicio de ejecución del programa			
-	MOV SP, stackTop ;Mover SP a la posición del puntero	 
+Inicio:	;Inicio de ejecución del programa			
+	MOV SP, stackTop ;Mover SP a la posición que marca el valor de "stackTop" 
 	MOV C, gatos ;Mover C a posición definida en "gatos"
 	MOV D, texto ;Mover D a posición definida en "texto"
-	CALL .loop ;Llamar la función loop (bucle) para su ejecución		
-	HLT ;Finalizar programa		
+	CALL .loop ;Llamar la función loop (bucle) para su ejecución			
 
-.loop:		;Inicia el bucle		
-	MOVB AL, [C]	;Sobreescribir "AL" en la posición de C
-	MOVB [D], AL	;Sobreescribir D en la posición de AL de la línea anterior
-	INC C ;Incrementar C para mover la posición
-	INC D ;Incrementar D para mover la posición
-	CMPB BL, [C] ;Comparar el valor de BL con C
-	JNZ .loop ;Condicional, si no se cumple la comparación, retornar a loop, si si se cumple, continuar	
+.loop:		;Inicia el bucle para escribir el texto en el display de texto		
+	MOVB AL, [C]	;Mover la parte baja del puntero A a la posicion que marca el Byte que tiene la casilla donde esta C
+	MOVB [D], AL	;Sobreescribir el byte donde esta D con la posicion de la parte baja del puntero A
+	INC C ;Incrementar 1 la posicion de C 
+	INC D ;Incrementar 1 la posicion de D 
+	CMPB BL, [C] ;Comparar el valor de BL con el byte que señala C
+	JNZ .loop ;Condicional, si no son iguales , retornar a loop, si son iguales, continuar	
 	MOV D, pantalla ;Mover D a la posición establecida en "pantalla"
     INC C ;Incrementar C para mover la posición
     CALL .loop2	;Llamar la función loop2
-    CALL boot ;Llamar la función boot
-    RET ;Retornar
-   
-.loop2:
-	MOVB AL, [C] ;Mover AL a la posición de C	
-	MOVB [D], AL ;Mover D a la posición de AL
+    CALL boot ;Llamar la función boot, esto para volver a iniciar el ciclo y tener en bucle constante la animacion sin tener que parar
+
+.loop2: ;Inicia un bucle para la impresion del primer sprite en la pantalla grafica
+	MOVB AL, [C] ;Mover AL a la posición del byte que señala C	
+	MOVB [D], AL ;Sobreescribir el byte donde esta D con la posicion de AL
 	INC C ;Incrementar C para mover la posición
 	INC D;Incrementar D para mover la posición
-	CMP D,findelapantalla ;Comparar D  con "findelapantalla" si no se cumple, retornar
-    JNZ .loop2 ;Regresar a loop2 si no se cumple la condición anterior
+	CMP D,findelapantalla ;Comparar D  con "findelapantalla" (Esto para poder hacer que cuando se acabe la pantalla no continue)
+    JNZ .loop2 ;Regresar a loop2 si no son iguales, si son iguales continuar
     MOV D, delay ;Mover D a la posición de "delay"
     INC C ;Incrementar C para mover la posición
     CALL .loopDELAY ;Llamar a la función de delay del bucle
     RET ;Retornar
     
-.loopDELAY:
+.loopDELAY: ;Aqui es el bucle que cumple como Delay, ya que va a ir sumandose del 0 hasta el numero que indiquemos como "delay" asi pudiendo aumentarlo a disminuirlo moviendo solo esa parte del codigo
     INC B ;Incrementa el valor de B
     CMP B, D ;Compara el valor de B con D 
     JNZ .loopDELAY ;Si el valor de B no es igual a D, regresa al .loopDELAY y si es igual sigue
     MOV D, pantalla2 ;Mueve D a la posición de "pantalla2"
     MOV B, 0 ;Mueve B a la posición 0
-    CALL .loop22 ;llama a la funcion .loop22
+    CALL .loop3 ;llama a la funcion .loop3
     RET ;Retorna al CALL que llamo la función .loopDELAY
 
-.loop22:
-	MOVB AL, [C] ;Mover AL a la posición de C 
-    MOVB [D], AL ;Mover D a la posición de AL
+.loop3: ; Loop para el sprite que mueve la cola del gato
+	MOVB AL, [C] ;Mover AL a la posición del byte C
+    MOVB [D], AL ;Sobreescribir el byte de D con la posicion de AL
     INC C ;Incrementamos C para mover la posición 
     INC D ;Incrementamos D para mover la posición
-    CMPB BL, [C] ; Compara el valor de BL con C
-    JNZ .loop22 ;Regresa al loop22 si no se cumple la condición anterior 
+    CMPB BL, [C] ; Compara el valor de la posicion de BL con el byte de C
+    JNZ .loop22 ;Si son iguales continuar, en caso contrario regresar
     MOV D, pantalla2 ;Mover D a al posición de "pantalla2"
     INC C ;Incrementamos C para mover la posición
-    CALL .loop222 ;Llamar a la función del loop22
-    RET ;Retorna al CALL que llamó la función de .loop22
-.loop222:
+    CALL .loop4 ;Llamar a la función del loop4
+    RET ;Retorna al CALL que llamó la función de .loop3
+.loop4: ; Loop para el sprite que mueve la cola del gato 2
 	MOVB AL, [C] ; Esta línea copia el dato de la dirección de memoria indicada por C al registro AL 	
 	MOVB [D], AL ; Aquí se mueve el valor del registro recien puesto en AL a la dirección de D
 	INC C        ; Se incrementa el valor del registro C en 1.
 	INC D        ; Se incrementa el valor del registro D en 1.
 	CMPB BL, [C] ; Después de los cambios se compara el valor del registro BL con el byte apuntado por C
-    JNZ .loop222     ; Si el resultado de la comparación anterior no es cero (BL no es igual al valor en [C]), salta de nuevo a la etiqueta .loop222, haciendo un bucle.
+    JNZ .loop222     ; Si el resultado de la comparación anterior no es cero (BL no es igual al valor en [C]), salta de nuevo a la etiqueta .loop4, haciendo un bucle.
     INC C            ; Si se cumplio lo anterior ahora incrementamos el registro C en 1, avanzando a lo siguiente en el código
-    RET              ; Retorna al CALL que llamó al .loop222 lo que finaliza su ejecución
+    RET              ; Retorna al CALL que llamó al .loop4 lo que finaliza su ejecución
+
     
 
     
