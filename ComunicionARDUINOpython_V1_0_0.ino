@@ -1,11 +1,26 @@
+#include <DHT.h>
+
+#define DHTPIN 2    // Pin donde está conectado el DHT11
+#define DHTTYPE DHT11   // Definir el tipo de DHT
+
+DHT dht(DHTPIN, DHTTYPE);
+
 void setup() {
-  Serial.begin(9600); // Inicia comunicación serial a 9600 baudios
+  Serial.begin(9600);
+  dht.begin();
 }
 
 void loop() {
-  // Simula lectura de temperatura (ejemplo con sensor LM35)
-  float temperatura = analogRead(A0) * 0.488; // Conversión a grados Celsius
-  Serial.print("TEMP:"); // Encabezado para identificar el dato
-  Serial.println(temperatura); // Envía el valor por serial
-  delay(1000); // Espera 1 segundo entre lecturas
+
+  // Leer los valores del DHT11
+  float temperatura = dht.readTemperature();
+  float humedad = dht.readHumidity();
+
+  // Enviar los datos al puerto serial
+  Serial.print("Locura3:");
+  Serial.println(temperatura);
+  Serial.print("Locura4:");
+  Serial.println(humedad); // Enviar humedad como un valor adicional
+
+  delay(900); // Esperar 2 segundos antes de la siguiente lectura
 }
