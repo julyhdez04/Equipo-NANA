@@ -62,5 +62,5 @@ try:
                 hume, temp, mov, dis = None, None, None, None  # Reinicia las variables a None para prepararlas para la próxima lectura
 
 except KeyboardInterrupt: #Captura la interrupción del programa por parte del usuario
-    print("Interrupción por usuario. Cerrando conexión.") # Cierra la conexión con el dispositivo Arduino
-    arduino.close()
+    print("Interrupción por usuario. Cerrando conexión.") # Imprime un mensaje indicando que el usuario ha interrumpido el programa
+    arduino.close()  # Cierra la conexión con el dispositivo Arduino
