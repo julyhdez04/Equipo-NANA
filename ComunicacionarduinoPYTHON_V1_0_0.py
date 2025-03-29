@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-V.1.3.0
+V.1.4.0
 Created on Tue Mar 25 22:20:09 2025
 
 @author: Choclotherock
@@ -8,15 +8,15 @@ Created on Tue Mar 25 22:20:09 2025
          kay16mich
          julyhdez04
 """
-import serial
-import csv
-import os
+import serial //Llamar libreria serial que permite la comunicación con Arduino, se usa para leer y escribir datos desde los puertos COM
+import csv //Llamar libreria csv que nos guarda los datos recopilados desde arduino, lee y escribe archivos CSV 
+import os //llamar libreria OS nos ayuda a interactuar con el sistema operativo, comprueba que el archivo csv exista 
 
 # Configura el puerto serie (cambia 'COM4' por tu puerto Arduino)
-arduino = serial.Serial('COM4', 9600, timeout=1)
+arduino = serial.Serial('COM4', 9600, timeout=1) //Se abre la comunicación, en el nombre del puerto que conectamos el arduino, se da la vleocidad de comunicación y un tiempo de espera para leer los datos
 
 # Nombre del archivo CSV
-archivo_csv = "datos.csv"
+archivo_csv = "datos.csv" //Lugar donde guardamos los datos de lectura csv
 
 # Verifica si el archivo ya existe para escribir encabezados solo una vez
 archivo_existe = os.path.isfile(archivo_csv)
