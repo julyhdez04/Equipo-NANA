@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-V.1.4.0
+V.1.5.0
 Created on Tue Mar 25 22:20:09 2025
 
 @author: Choclotherock
@@ -22,33 +22,33 @@ archivo_csv = "datos.csv" #Lugar donde guardamos los datos de lectura csv
 archivo_existe = os.path.isfile(archivo_csv)
 
 # Escribir encabezados solo si el archivo es nuevo
-if not archivo_existe:         #S i el archivo no existe entonces
+if not archivo_existe:         #Si el archivo no existe entonces
     with open(archivo_csv, mode="w", newline="") as archivo:         #Evita las lineas en blanco del archivo de lectura CSV
-        escritor_csv = csv.writer(archivo)         
-        escritor_csv.writerow(["Humedad", "Temperatura", "Movimiento", "Distancia"])         
+        escritor_csv = csv.writer(archivo)                           #Crear un nuevo archivo
+        escritor_csv.writerow(["Humedad", "Temperatura", "Movimiento", "Distancia"]) #Colocar las variables en el archivo        
 
 #Bucle para leer datos
 try:
     hume, temp, mov, dis = None, None, None, None   #Declaracion de variables de datos    
     while True:
-        if arduino.in_waiting > 0:
-            linea = arduino.readline().decode('utf-8').strip()
+        if arduino.in_waiting > 0:                  #Mientras el valor siga siendo None el arduino espera un nuevo dato
+            linea = arduino.readline().decode('utf-8').strip() #Se define que lea los valores que ingresan al arduino
 
             if linea.startswith("Humedad: "):#Condicional para leer los datos de humedad 
-                hume = float(linea.split(":")[1])  
-                print(f"Humedad: {hume}")
+                hume = float(linea.split(":")[1])  #Se define el valor de la humedad
+                print(f"Humedad: {hume}") #Imprime el texto junto con el valor de la humedad
                 
             if linea.startswith("Temperatura: "): #Condicional para leer los datos de temperatura 
-                temp = float(linea.split(":")[1])  
-                print(f"Temperatura: {temp} °C")
+                temp = float(linea.split(":")[1])  #Se define el valor de la temperatura
+                print(f"Temperatura: {temp} °C") #Imprime el texto junto con el valor de la temperatura
                     
             if linea.startswith("MOVIMIENTO: "): #Condicional para leer los datos de movimiento 
-                mov = float(linea.split(":")[1])  
-                print(f"MOVIMIENTO: {mov}")
+                mov = float(linea.split(":")[1])  #Se define si detecta movimiento el sensor
+                print(f"MOVIMIENTO: {mov}") #Muestra el texto junto con el valor
                     
             if linea.startswith("Distancia: "): #Condicional para leer los datos de distancia
-                dis = float(linea.split(":")[1])  
-                print(f"Distancia: {dis}")
+                dis = float(linea.split(":")[1])  #Define la distancia detectada
+                print(f"Distancia: {dis}") #Muestra el texto y la distancia detectada
 
             # Escribir en CSV solo si todos los valores han sido leídos
             if None not in [hume, temp, mov, dis]:
@@ -61,5 +61,5 @@ try:
                 hume, temp, mov, dis = None, None, None, None  
 
 except KeyboardInterrupt: #Cancelar si el usuario lo requiere
-    print("Interrupción por usuario. Cerrando conexión.")
+    print("Interrupción por usuario. Cerrando conexión.") #Imprimir el mensaje cuando el usuario cierre el programa
     arduino.close()
