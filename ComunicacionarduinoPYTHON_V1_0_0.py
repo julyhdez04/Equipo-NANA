@@ -7,6 +7,7 @@ Created on Tue Mar 25 22:20:09 2025
          Pinging78
          kay16mich
          julyhdez04
+         Hiukilll
 """
 import serial #Llamar libreria serial que permite la comunicación con Arduino, se usa para leer y escribir datos desde los puertos COM
 import csv #Llamar libreria csv que nos guarda los datos recopilados desde arduino, lee y escribe archivos CSV 
@@ -51,15 +52,15 @@ try:
                 print(f"Distancia: {dis}") #Muestra el texto y la distancia detectada
 
             # Escribir en CSV solo si todos los valores han sido leídos
-            if None not in [hume, temp, mov, dis]:
-                with open(archivo_csv, mode="a", newline="") as archivo:
-                    escritor_csv = csv.writer(archivo)
-                    escritor_csv.writerow([hume, temp, mov, dis])
-                    print("Datos guardados en CSV.")
+            if None not in [hume, temp, mov, dis]: # Se verifica que ninguna de las variables hume, temp, mov, dis sea None
+                with open(archivo_csv, mode="a", newline="") as archivo: # Se abre el archivo CSV en modo "append" (añadir) y evita líneas en blanco
+                    escritor_csv = csv.writer(archivo) # Se crea un objeto escritor CSV para poder escribir en el archivo
+                    escritor_csv.writerow([hume, temp, mov, dis]) # Escribe una fila en el archivo CSV con los valores de hume, temp, mov y dis
+                    print("Datos guardados en CSV.") # Imprime un mensaje en la consola indicando que los datos han sido guardados
 
                 # Reiniciar variables
-                hume, temp, mov, dis = None, None, None, None  
+                hume, temp, mov, dis = None, None, None, None  # Reinicia las variables a None para prepararlas para la próxima lectura
 
-except KeyboardInterrupt: #Cancelar si el usuario lo requiere
-    print("Interrupción por usuario. Cerrando conexión.") #Imprimir el mensaje cuando el usuario cierre el programa
+except KeyboardInterrupt: #Captura la interrupción del programa por parte del usuario
+    print("Interrupción por usuario. Cerrando conexión.") # Cierra la conexión con el dispositivo Arduino
     arduino.close()
