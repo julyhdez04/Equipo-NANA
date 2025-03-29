@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-V.1.2.1
+V.1.3.0
 Created on Tue Mar 25 22:20:09 2025
 
 @author: Choclotherock
@@ -9,33 +9,56 @@ Created on Tue Mar 25 22:20:09 2025
          julyhdez04
 """
 import serial
+import csv
+import os
 
 # Configura el puerto serie (cambia 'COM4' por tu puerto Arduino)
-arduino = serial.Serial ('COM4', 9600, timeout=1)
+arduino = serial.Serial('COM4', 9600, timeout=1)
+
+# Nombre del archivo CSV
+archivo_csv = "datos.csv"
+
+# Verifica si el archivo ya existe para escribir encabezados solo una vez
+archivo_existe = os.path.isfile(archivo_csv)
+
+# Escribir encabezados solo si el archivo es nuevo
+if not archivo_existe:
+    with open(archivo_csv, mode="w", newline="") as archivo:
+        escritor_csv = csv.writer(archivo)
+        escritor_csv.writerow(["Humedad", "Temperatura", "Movimiento", "Distancia"])
 
 try:
+    hume, temp, mov, dis = None, None, None, None  
     while True:
         if arduino.in_waiting > 0:
             linea = arduino.readline().decode('utf-8').strip()
 
             if linea.startswith("Humedad: "):
-                hume = float(linea.split(":")[1])  # Extrae el valor numérico
+                hume = float(linea.split(":")[1])  
                 print(f"Humedad: {hume}")
                 
             if linea.startswith("Temperatura: "):
-                    temp = float(linea.split(":")[1])  # Extrae el valor numérico
-                    print(f"Temperatura: {temp} °C")
+                temp = float(linea.split(":")[1])  
+                print(f"Temperatura: {temp} °C")
                     
             if linea.startswith("MOVIMIENTO: "):
-                    mov = float(linea.split(":")[1])  # Extrae el valor numérico
-                    print(f"MOVIMIENTO: {mov}")
+                mov = float(linea.split(":")[1])  
+                print(f"MOVIMIENTO: {mov}")
                     
             if linea.startswith("Distancia: "):
-                    dis = float(linea.split(":")[1])  # Extrae el valor numérico
-                    print(f"Distancia: {dis}")
+                dis = float(linea.split(":")[1])  
+                print(f"Distancia: {dis}")
 
-                
+            # Escribir en CSV solo si todos los valores han sido leídos
+            if None not in [hume, temp, mov, dis]:
+                with open(archivo_csv, mode="a", newline="") as archivo:
+                    escritor_csv = csv.writer(archivo)
+                    escritor_csv.writerow([hume, temp, mov, dis])
+                    print("Datos guardados en CSV.")
+
+                # Reiniciar variables
+                hume, temp, mov, dis = None, None, None, None  
+
 except KeyboardInterrupt:
     print("Interrupción por usuario. Cerrando conexión.")
     arduino.close()
-    
