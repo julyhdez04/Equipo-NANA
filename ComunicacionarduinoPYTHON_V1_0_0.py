@@ -29,24 +29,24 @@ if not archivo_existe:         #S i el archivo no existe entonces
 
 #Bucle para leer datos
 try:
-    hume, temp, mov, dis = None, None, None, None           
+    hume, temp, mov, dis = None, None, None, None   #Declaracion de variables de datos    
     while True:
         if arduino.in_waiting > 0:
             linea = arduino.readline().decode('utf-8').strip()
 
-            if linea.startswith("Humedad: "):
+            if linea.startswith("Humedad: "):#Condicional para leer los datos de humedad 
                 hume = float(linea.split(":")[1])  
                 print(f"Humedad: {hume}")
                 
-            if linea.startswith("Temperatura: "):
+            if linea.startswith("Temperatura: "): #Condicional para leer los datos de temperatura 
                 temp = float(linea.split(":")[1])  
                 print(f"Temperatura: {temp} °C")
                     
-            if linea.startswith("MOVIMIENTO: "):
+            if linea.startswith("MOVIMIENTO: "): #Condicional para leer los datos de movimiento 
                 mov = float(linea.split(":")[1])  
                 print(f"MOVIMIENTO: {mov}")
                     
-            if linea.startswith("Distancia: "):
+            if linea.startswith("Distancia: "): #Condicional para leer los datos de distancia
                 dis = float(linea.split(":")[1])  
                 print(f"Distancia: {dis}")
 
@@ -60,6 +60,6 @@ try:
                 # Reiniciar variables
                 hume, temp, mov, dis = None, None, None, None  
 
-except KeyboardInterrupt:
+except KeyboardInterrupt: #Cancelar si el usuario lo requiere
     print("Interrupción por usuario. Cerrando conexión.")
     arduino.close()
