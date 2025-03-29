@@ -22,13 +22,14 @@ archivo_csv = "datos.csv" #Lugar donde guardamos los datos de lectura csv
 archivo_existe = os.path.isfile(archivo_csv)
 
 # Escribir encabezados solo si el archivo es nuevo
-if not archivo_existe:
-    with open(archivo_csv, mode="w", newline="") as archivo:
-        escritor_csv = csv.writer(archivo)
-        escritor_csv.writerow(["Humedad", "Temperatura", "Movimiento", "Distancia"])
+if not archivo_existe:         #S i el archivo no existe entonces
+    with open(archivo_csv, mode="w", newline="") as archivo:         #Evita las lineas en blanco del archivo de lectura CSV
+        escritor_csv = csv.writer(archivo)         
+        escritor_csv.writerow(["Humedad", "Temperatura", "Movimiento", "Distancia"])         
 
+#Bucle para leer datos
 try:
-    hume, temp, mov, dis = None, None, None, None  
+    hume, temp, mov, dis = None, None, None, None           
     while True:
         if arduino.in_waiting > 0:
             linea = arduino.readline().decode('utf-8').strip()
