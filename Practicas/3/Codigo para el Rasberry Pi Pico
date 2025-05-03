@@ -1,0 +1,73 @@
+# -- coding: utf-8 --
+# V.1.0.0 MicroPython para Raspberry Pi Pico
+from machine import Pin
+from time import sleep, time
+import dht
+import os
+
+# Configuración de sensores
+sensor_dht = dht.DHT11(Pin(2))  # Sensor DHT11 en pin GP2
+pir = Pin(3, Pin.IN)            # Sensor PIR en pin GP3
+trig = Pin(8, Pin.OUT)          # TRIG ultrasónico en pin GP8
+echo = Pin(10, Pin.IN)          # ECHO ultrasónico en pin GP10
+
+# Archivo CSV para guardar datos
+archivo_csv = "datos.csv"
+encabezados = "Humedad,Temperatura,MOVIMIENTO,Distancia\n"
+
+# Escribir encabezados si el archivo no existe
+if archivo_csv not in os.listdir():
+    with open(archivo_csv, "w") as f:
+        f.write(encabezados)
+
+def leer_ultrasonico():
+    trig.low()
+    sleep(0.002)
+    trig.high()
+    sleep(0.01)
+    trig.low()
+
+    while echo.value() == 0:
+        t1 = time()
+    while echo.value() == 1:
+        t2 = time()
+    
+    duration = t2 - t1
+    distancia = (duration * 34300) / 2  # velocidad del sonido: 343 m/s
+    return round(distancia, 2)
+
+try:
+    while True:
+        # Leer DHT11
+        try:
+            sensor_dht.measure()
+            h = sensor_dht.humidity()
+            t = sensor_dht.temperature()
+        except Exception as e:
+            print("Error DHT11:", e)
+            continue
+
+        # Leer PIR
+        mov = pir.value()
+
+        # Leer distancia
+        try:
+            d = leer_ultrasonico()
+        except:
+            d = -1  # error de lectura
+
+        # Mostrar en consola
+        print(f"Humedad: {h}")
+        print(f"Temperatura: {t} °C")
+        print(f"MOVIMIENTO: {mov}")
+        print(f"Distancia: {d} cm")
+
+        # Guardar en archivo CSV
+        with open(archivo_csv, "a") as f:
+            f.write(f"{h},{t},{mov},{d}\n")
+        print("Datos guardados en CSV.\n")
+
+        sleep(2)
+
+except KeyboardInterrupt:
+    print("Interrumpido por el usuario.")
