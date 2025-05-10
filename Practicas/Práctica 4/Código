@@ -1,4 +1,4 @@
-#V.1.0.0
+#V.1.0.1
 #Actividad de filtrado y Análisis de datos de sensores
 
 #Importamos bibliotecas
@@ -20,8 +20,8 @@ frec_muestreo=1/inter_muestreo #Frecuencia en Hz para el muestreo
 #Agregamos nuestra columna de tiempo en segundos para la graficacion del eje x
 temperatura['Tiempo']=temperatura.index*inter_muestreo #Sacamos el tiempo multiplicando los datos del archivo por el intervalo de muestreo
 humedad['Tiempo']=humedad.index*inter_muestreo
-viento['Tiempo']=viento.indexinter_muestreo
+viento['Tiempo']=viento.index*inter_muestreo
 
 #Definimos funcion para promediado movil
-def promediado_movil(serie, ventana=3)
-return serie.rolling(window=ventana, center=True).mean() #Centramos el promedio
+def promediado_movil(serie, ventana=3):
+    return serie.rolling(window=ventana, center=True).mean() #Centramos el promedio
