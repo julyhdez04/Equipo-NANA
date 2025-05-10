@@ -1,1 +1,27 @@
+#V.1.0.0
+#Actividad de filtrado y Análisis de datos de sensores
 
+#Importamos bibliotecas
+import pandas as pd #Librería para manipulacion de datos tabulables 
+import numpy as np #Libreria para calculos numericos
+import matplotlib.pyplot as plt #Libreria para graficacion de datos
+from scipy.signal import butter, filtfilt #Libreria para diseñar y aplicar los filtros
+from scipy.fft import fft, fftfreq #Libreria para hacer analisis de frecuencias de Fourier
+
+#Primero cargamos los archivos para que los busque y lea el programa
+temperatura=pd.read_csv('temperatura.csv') #Abrir el archivo de datos de temperatura
+humedad=pd.read_csv('humedad.csv') #Abrir el archivo de datos de humedad
+viento=pd.read_csv('humedad.csv') #Abrir archivo de datos de viento
+
+#Ajustamos nuestra escala de muestreo
+inter_muestreo=5 #Intervalo de 5 segundos
+frec_muestreo=1/inter_muestreo #Frecuencia en Hz para el muestreo
+
+#Agregamos nuestra columna de tiempo en segundos para la graficacion del eje x
+temperatura['Tiempo']=temperatura.index*inter_muestreo #Sacamos el tiempo multiplicando los datos del archivo por el intervalo de muestreo
+humedad['Tiempo']=humedad.index*inter_muestreo
+viento['Tiempo']=viento.indexinter_muestreo
+
+#Definimos funcion para promediado movil
+def promediado_movil(serie, ventana=3)
+return serie.rolling(window=ventana, center=True).mean() #Centramos el promedio
