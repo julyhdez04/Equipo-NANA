@@ -1,4 +1,4 @@
-#V.1.0.1
+#V.1.1.0
 #Actividad de filtrado y Análisis de datos de sensores
 
 #Importamos bibliotecas
@@ -8,10 +8,12 @@ import matplotlib.pyplot as plt #Libreria para graficacion de datos
 from scipy.signal import butter, filtfilt #Libreria para diseñar y aplicar los filtros
 from scipy.fft import fft, fftfreq #Libreria para hacer analisis de frecuencias de Fourier
 
+#1.-Cargar los 3 archivos CSV
 #Primero cargamos los archivos para que los busque y lea el programa
 temperatura=pd.read_csv('temperatura.csv') #Abrir el archivo de datos de temperatura
 humedad=pd.read_csv('humedad.csv') #Abrir el archivo de datos de humedad
-viento=pd.read_csv('humedad.csv') #Abrir archivo de datos de viento
+viento=pd.read_csv('viento.csv') #Abrir archivo de datos de viento
+
 
 #Ajustamos nuestra escala de muestreo
 inter_muestreo=5 #Intervalo de 5 segundos
@@ -22,6 +24,59 @@ temperatura['Tiempo']=temperatura.index*inter_muestreo #Sacamos el tiempo multip
 humedad['Tiempo']=humedad.index*inter_muestreo
 viento['Tiempo']=viento.index*inter_muestreo
 
+#Graficamos los datos originales
+print(humedad.head())
+
+plt.subplot(1, 1, 1)
+plt.plot(humedad['Tiempo'], humedad['Humedad_Relativa_%'])
+plt.title('HUMEDAD PRUEBA')
+plt.xlabel('Tiempo')
+plt.ylabel('Humedad')
+plt.grid(True)
+
+"""
+plt.subplot(1, 1, 1)
+plt.plot(temperatura['Tiempo'], temperatura['Temperatura_C'])
+plt.title('TEMPERATURA PRUEBA')
+plt.xlabel('Tiempo')
+plt.ylabel('Temperatura Celsius')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+plt.subplot(1, 1, 1)
+plt.plot(viento['Tiempo'], viento['Velocidad_Viento_mps'])
+plt.title('VIENTO PRUEBA')
+plt.xlabel('Tiempo')
+plt.ylabel('Temperatura Celsius')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+plt.subplot(1, 1, 1)
+plt.plot(viento['Tiempo'], viento['Direccion_Viento_deg'])
+plt.title('VIENTO PRUEBA')
+plt.xlabel('Tiempo')
+plt.ylabel('Angulo')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+"""
+
+
+#2.-Aplicar Promediado Móvil
 #Definimos funcion para promediado movil
-def promediado_movil(serie, ventana=3):
-    return serie.rolling(window=ventana, center=True).mean() #Centramos el promedio
+humedad["Movil"] = humedad['Humedad_Relativa_%'].rolling(window=3, center=True).mean()
+
+print(humedad["Movil"].head())
+#Graficamos en la misma tabla el promedio movil
+plt.subplot(1, 1, 1)
+plt.plot(humedad['Tiempo'], humedad["Movil"])
+plt.title('HUMEDAD PRUEBA2')
+plt.xlabel('Tiempo')
+plt.ylabel('Humedad')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+#3.-    :p
