@@ -1,4 +1,4 @@
-#V.1.1.0
+#V.1.0.4
 #Actividad de filtrado y Análisis de datos de sensores
 
 #Importamos bibliotecas
@@ -13,9 +13,10 @@ from scipy.fft import fft, fftfreq #Libreria para hacer analisis de frecuencias 
 temperatura=pd.read_csv('temperatura.csv') #Abrir el archivo de datos de temperatura
 humedad=pd.read_csv('humedad.csv') #Abrir el archivo de datos de humedad
 viento=pd.read_csv('viento.csv') #Abrir archivo de datos de viento
+#se leen los archivos tal cual nos los da el sensor
 
 
-#Ajustamos nuestra escala de muestreo
+#Ajustamos nuestra escala y frecuencia de muestreo
 inter_muestreo=5 #Intervalo de 5 segundos
 frec_muestreo=1/inter_muestreo #Frecuencia en Hz para el muestreo
 
@@ -25,10 +26,11 @@ humedad['Tiempo']=humedad.index*inter_muestreo
 viento['Tiempo']=viento.index*inter_muestreo
 
 
-#2.-Aplicar Promediado Móvil
+#2.-Aplicar Promediado Móvil con el fin de suavizar nuestra señal
 def promediado_movil(serie, ventana=3):
     return serie.rolling(window=ventana, center=True).mean()
 
+#Se guarda como una nueva columna llamada promedio
 temperatura['Promedio'] = promediado_movil(temperatura['Temperatura_C'])
 humedad['Promedio'] = promediado_movil(humedad['Humedad_Relativa_%'])
 viento['Promedio'] = promediado_movil(viento['Velocidad_Viento_mps'])
@@ -37,8 +39,9 @@ viento['Promedio'] = promediado_movil(viento['Velocidad_Viento_mps'])
 #3.- Definimos nuestro filtro pasa bandas
 def filtro_pbd(serie, f_baja=0.02, f_alta=0.2, orden=4):
     b, a = butter(orden, [f_baja, f_alta], btype= 'band')
-    return filtfilt(b,a,serie)
+    return filtfilt(b,a,serie) #nuestro filtrado hacia adelante y hacia atras para no tener desfase
 
+#Lo guardamos en nueva columna llamada PasaBandas
 temperatura['Pasa_Bandas'] = filtro_pbd(temperatura['Temperatura_C'])
 humedad['Pasa_Bandas'] = filtro_pbd(humedad['Humedad_Relativa_%'])
 viento['Pasa_Bandas'] = filtro_pbd(viento['Velocidad_Viento_mps'])
@@ -54,10 +57,10 @@ viento['Pasa_Bajas'] = filtro_pbj(viento['Velocidad_Viento_mps'])
 
 #Análisis de fourier
 def calculo_fft(serie):
-    N=len(serie)
-    frec= fftfreq(N, d=1/frec_muestreo)[:N//2]
-    magnitud= np.abs(fft(serie))[:N//2]
-    return frec, magnitud
+    N=len(serie) #Numero de muestras
+    frec= fftfreq(N, d=1/frec_muestreo)[:N//2] #Vector de frecuencias
+    magnitud= np.abs(fft(serie))[:N//2] #Calcula la transformada
+    return frec, magnitud #Regresa la mitad positiva 
 
 #4.-Graficamos todos los datos
 def graficar_todo(df, columna, nombre_sensor):
