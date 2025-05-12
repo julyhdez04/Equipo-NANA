@@ -1,4 +1,4 @@
-#V.1.0.4
+#V.1.0.6
 #Actividad de filtrado y Análisis de datos de sensores
 
 #Importamos bibliotecas
@@ -87,38 +87,38 @@ def graficar_todo(df, columna, nombre_sensor):
     # Aquí se extrae la columna 'Pasa_Bandas' para graficar la señal filtrada por el filtro pasa bandas
     banda = df['Pasa_Bandas']
 
-    plt.figure(figsize=(12, 8))
-    plt.plot(tiempo, original, label='Original')
-    plt.plot(tiempo, promedio, '--', label='Promediado')
-    plt.plot(tiempo, baja, '--', label='Pasa Bajas')
-    plt.plot(tiempo, banda, ':', label='Pasa Bandas')
-    plt.title(f'{nombre_sensor} - Señales Procesadas')
-    plt.xlabel('Tiempo (s)')
-    plt.ylabel(nombre_sensor)
-    plt.legend()
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
+    plt.figure(figsize=(12, 8)) #define el tamaño de la grafica
+    plt.plot(tiempo, original, label='Original') #Se ubica el valor original en la grafica
+    plt.plot(tiempo, promedio, '--', label='Promediado') #Se ubica el valor Promediado en la grafica
+    plt.plot(tiempo, baja, '--', label='Pasa Bajas') #Se ubica el valor del filtro Pasa Bajas en la grafica
+    plt.plot(tiempo, banda, ':', label='Pasa Bandas') #Se ubica el valor del filtro Pasa Bandas en la grafica
+    plt.title(f'{nombre_sensor} - Señales Procesadas') #Se ubica el titulo de la grafica
+    plt.xlabel('Tiempo (s)') #Se define el tiempo en segundos en el eje X
+    plt.ylabel(nombre_sensor) #Se define el valor de los sensores en el eje Y
+    plt.legend() #Muestra la leyenda en la grafica
+    plt.grid(True) #Muestra la cuadricula en la grafica
+    plt.tight_layout() #Es para que no se sobreponga el nombre de las variables
+    plt.show() #Muestra la grafica
 
     # FFT
-    f_orig, y_orig = calculo_fft(original)
-    f_baja, y_baja = calculo_fft(baja)
-    f_banda, y_banda = calculo_fft(banda)
+    f_orig, y_orig = calculo_fft(original) #Ahora los datos pasan por la transformada de fourier y se pone el resultado
+    f_baja, y_baja = calculo_fft(baja) 
+    f_banda, y_banda = calculo_fft(banda) 
 
-    plt.figure(figsize=(10, 5))
-    plt.plot(f_orig, y_orig, label='Original')
-    plt.plot(f_baja, y_baja, label='Pasa Bajas', linestyle='--')
-    plt.plot(f_banda, y_banda, label='Pasa Bandas', linestyle=':')
-    plt.title(f'{nombre_sensor} - Espectro de Frecuencia')
-    plt.xlabel('Frecuencia (Hz)')
-    plt.ylabel('Magnitud')
-    plt.legend()
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
+    plt.figure(figsize=(10, 5)) #Se define el tamaño de la grafica
+    plt.plot(f_orig, y_orig, label='Original') #Se ubica el valor original en la grafica
+    plt.plot(f_baja, y_baja, label='Pasa Bajas', linestyle='--') #Se ubica el valor del filtro Pasa Bajas en la grafica
+    plt.plot(f_banda, y_banda, label='Pasa Bandas', linestyle=':') #Se ubica el valor del filtro Pasa Bandas en la grafica
+    plt.title(f'{nombre_sensor} - Espectro de Frecuencia') #Se ubica el titulo de la grafica
+    plt.xlabel('Frecuencia (Hz)') #Se asigna la Frecuencia en Hz al eje X
+    plt.ylabel('Magnitud') #Se asigna el valor de la Magnitud en el eje Y
+    plt.legend() #Muestra la leyenda en la grafica
+    plt.grid(True) #Muestra la cuadricula en la grafica
+    plt.tight_layout() #Es para que no se sobreponga el nombre de las variables
+    plt.show() #Muestra la grafica
+
 #Ejecutamos para cada uno de los sensores
 graficar_todo(temperatura, 'Temperatura_C', 'Temperatura')
 graficar_todo(humedad, 'Humedad_Relativa_%', 'Humedad')
 graficar_todo(viento, 'Velocidad_Viento_mps', 'Viento')
-
 
