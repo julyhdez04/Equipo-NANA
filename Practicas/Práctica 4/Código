@@ -28,9 +28,11 @@ viento['Tiempo']=viento.index*inter_muestreo
 
 #2.-Aplicar Promediado Móvil con el fin de suavizar nuestra señal
 def promediado_movil(serie, ventana=3):
+  # Aquí se aplica un promedio móvil a la serie de datos     
     return serie.rolling(window=ventana, center=True).mean()
 
 #Se guarda como una nueva columna llamada promedio
+# Se le aplica el promediado a las columnas de 'Temperatura_C', 'Humedad_Relativa_%', 'Velocidad_Viento_mps' y guarda el resultado en una nueva columna con el nombre de 'Promedio'
 temperatura['Promedio'] = promediado_movil(temperatura['Temperatura_C'])
 humedad['Promedio'] = promediado_movil(humedad['Humedad_Relativa_%'])
 viento['Promedio'] = promediado_movil(viento['Velocidad_Viento_mps'])
@@ -38,36 +40,51 @@ viento['Promedio'] = promediado_movil(viento['Velocidad_Viento_mps'])
 
 #3.- Definimos nuestro filtro pasa bandas
 def filtro_pbd(serie, f_baja=0.02, f_alta=0.2, orden=4):
+    # Se crea un filtro pasa bandas utilizando la función butter para obtener los coeficientes b y a
     b, a = butter(orden, [f_baja, f_alta], btype= 'band')
+    # Después se aplica el filtro a la serie de datos usando filtfilt para evitar que haya desfases
     return filtfilt(b,a,serie) #nuestro filtrado hacia adelante y hacia atras para no tener desfase
 
 #Lo guardamos en nueva columna llamada PasaBandas
+# También se le aplica el filtro pasa bandas a las columnas 'Temperatura_C', 'Humedad_Relativa_%', 'Velocidad_Viento_mps' y guarda el resultado en el apartado 'Pasa_Bandas'
 temperatura['Pasa_Bandas'] = filtro_pbd(temperatura['Temperatura_C'])
 humedad['Pasa_Bandas'] = filtro_pbd(humedad['Humedad_Relativa_%'])
 viento['Pasa_Bandas'] = filtro_pbd(viento['Velocidad_Viento_mps'])
 
 #Definimos filtro pasa bajas
 def filtro_pbj(serie, fc=0.1, orden=4):
+    # De nuevo se crea un filtro pasa bajas utilizando la función butter para obtener los coeficientes b y a
     b, a = butter(orden, fc, btype='low')
+    # Tambien aplicamos el filtro a la serie de datos usando filtfilt
     return filtfilt(b, a, serie)
 
+# Le ponemos el filtro pasa bajas a las columnas 'Temperatura_C', 'Humedad_Relativa_%', 'Velocidad_Viento_mps' y guarda el resultado en 'Pasa_Bajas'
 temperatura['Pasa_Bajas'] = filtro_pbj(temperatura['Temperatura_C'])
 humedad['Pasa_Bajas'] = filtro_pbj(humedad['Humedad_Relativa_%'])
 viento['Pasa_Bajas'] = filtro_pbj(viento['Velocidad_Viento_mps'])
 
 #Análisis de fourier
 def calculo_fft(serie):
+    # Se obtiene el número de muestras de la serie
     N=len(serie) #Numero de muestras
+    # Se calcula el vector de frecuencias basado en la frecuencia de muestreo
     frec= fftfreq(N, d=1/frec_muestreo)[:N//2] #Vector de frecuencias
+    # Tambien calculamos la transformada de Fourier y obtenemos la magnitud de las frecuencias
     magnitud= np.abs(fft(serie))[:N//2] #Calcula la transformada
+    # Regresa el vector de frecuencias y la magnitud
     return frec, magnitud #Regresa la mitad positiva 
 
 #4.-Graficamos todos los datos
 def graficar_todo(df, columna, nombre_sensor):
+    # Aquí se extrae la columna 'Tiempo' del DataFrame para usarla como eje X en las gráficas
     tiempo = df['Tiempo']
+    # Aquí extrae una columna especificada para graficar los datos originales
     original = df[columna]
+    # Aquí extrae la columna 'Promedio' para graficar la señal suavizada
     promedio = df['Promedio']
+    # Aquí se extrae la columna 'Pasa_Bajas' para graficar la señal filtrada por el filtro pasa bajas
     baja = df['Pasa_Bajas']
+    # Aquí se extrae la columna 'Pasa_Bandas' para graficar la señal filtrada por el filtro pasa bandas
     banda = df['Pasa_Bandas']
 
     plt.figure(figsize=(12, 8))
