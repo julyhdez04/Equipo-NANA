@@ -24,59 +24,81 @@ temperatura['Tiempo']=temperatura.index*inter_muestreo #Sacamos el tiempo multip
 humedad['Tiempo']=humedad.index*inter_muestreo
 viento['Tiempo']=viento.index*inter_muestreo
 
-#Graficamos los datos originales
-print(humedad.head())
-
-plt.subplot(1, 1, 1)
-plt.plot(humedad['Tiempo'], humedad['Humedad_Relativa_%'])
-plt.title('HUMEDAD PRUEBA')
-plt.xlabel('Tiempo')
-plt.ylabel('Humedad')
-plt.grid(True)
-
-"""
-plt.subplot(1, 1, 1)
-plt.plot(temperatura['Tiempo'], temperatura['Temperatura_C'])
-plt.title('TEMPERATURA PRUEBA')
-plt.xlabel('Tiempo')
-plt.ylabel('Temperatura Celsius')
-plt.grid(True)
-plt.tight_layout()
-plt.show()
-
-plt.subplot(1, 1, 1)
-plt.plot(viento['Tiempo'], viento['Velocidad_Viento_mps'])
-plt.title('VIENTO PRUEBA')
-plt.xlabel('Tiempo')
-plt.ylabel('Temperatura Celsius')
-plt.grid(True)
-plt.tight_layout()
-plt.show()
-
-plt.subplot(1, 1, 1)
-plt.plot(viento['Tiempo'], viento['Direccion_Viento_deg'])
-plt.title('VIENTO PRUEBA')
-plt.xlabel('Tiempo')
-plt.ylabel('Angulo')
-plt.grid(True)
-plt.tight_layout()
-plt.show()
-"""
-
 
 #2.-Aplicar Promediado Móvil
-#Definimos funcion para promediado movil
-humedad["Movil"] = humedad['Humedad_Relativa_%'].rolling(window=3, center=True).mean()
+def promediado_movil(serie, ventana=3):
+    return serie.rolling(window=ventana, center=True).mean()
 
-print(humedad["Movil"].head())
-#Graficamos en la misma tabla el promedio movil
-plt.subplot(1, 1, 1)
-plt.plot(humedad['Tiempo'], humedad["Movil"])
-plt.title('HUMEDAD PRUEBA2')
-plt.xlabel('Tiempo')
-plt.ylabel('Humedad')
-plt.grid(True)
-plt.tight_layout()
-plt.show()
+temperatura['Promedio'] = promediado_movil(temperatura['Temperatura_C'])
+humedad['Promedio'] = promediado_movil(humedad['Humedad_Relativa_%'])
+viento['Promedio'] = promediado_movil(viento['Velocidad_Viento_mps'])
 
-#3.-    :p
+
+#3.- Definimos nuestro filtro pasa bandas
+def filtro_pbd(serie, f_baja=0.02, f_alta=0.2, orden=4):
+    b, a = butter(orden, [f_baja, f_alta], btype= 'band')
+    return filtfilt(b,a,serie)
+
+temperatura['Pasa_Bandas'] = filtro_pbd(temperatura['Temperatura_C'])
+humedad['Pasa_Bandas'] = filtro_pbd(humedad['Humedad_Relativa_%'])
+viento['Pasa_Bandas'] = filtro_pbd(viento['Velocidad_Viento_mps'])
+
+#Definimos filtro pasa bajas
+def filtro_pbj(serie, fc=0.1, orden=4):
+    b, a = butter(orden, fc, btype='low')
+    return filtfilt(b, a, serie)
+
+temperatura['Pasa_Bajas'] = filtro_pbj(temperatura['Temperatura_C'])
+humedad['Pasa_Bajas'] = filtro_pbj(humedad['Humedad_Relativa_%'])
+viento['Pasa_Bajas'] = filtro_pbj(viento['Velocidad_Viento_mps'])
+
+#Análisis de fourier
+def calculo_fft(serie):
+    N=len(serie)
+    frec= fftfreq(N, d=1/frec_muestreo)[:N//2]
+    magnitud= np.abs(fft(serie))[:N//2]
+    return frec, magnitud
+
+#4.-Graficamos todos los datos
+def graficar_todo(df, columna, nombre_sensor):
+    tiempo = df['Tiempo']
+    original = df[columna]
+    promedio = df['Promedio']
+    baja = df['Pasa_Bajas']
+    banda = df['Pasa_Bandas']
+
+    plt.figure(figsize=(12, 8))
+    plt.plot(tiempo, original, label='Original')
+    plt.plot(tiempo, promedio, '--', label='Promediado')
+    plt.plot(tiempo, baja, '--', label='Pasa Bajas')
+    plt.plot(tiempo, banda, ':', label='Pasa Bandas')
+    plt.title(f'{nombre_sensor} - Señales Procesadas')
+    plt.xlabel('Tiempo (s)')
+    plt.ylabel(nombre_sensor)
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+    # FFT
+    f_orig, y_orig = calculo_fft(original)
+    f_baja, y_baja = calculo_fft(baja)
+    f_banda, y_banda = calculo_fft(banda)
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(f_orig, y_orig, label='Original')
+    plt.plot(f_baja, y_baja, label='Pasa Bajas', linestyle='--')
+    plt.plot(f_banda, y_banda, label='Pasa Bandas', linestyle=':')
+    plt.title(f'{nombre_sensor} - Espectro de Frecuencia')
+    plt.xlabel('Frecuencia (Hz)')
+    plt.ylabel('Magnitud')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+#Ejecutamos para cada uno de los sensores
+graficar_todo(temperatura, 'Temperatura_C', 'Temperatura')
+graficar_todo(humedad, 'Humedad_Relativa_%', 'Humedad')
+graficar_todo(viento, 'Velocidad_Viento_mps', 'Viento')
+
+
